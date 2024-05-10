@@ -3,6 +3,6 @@
   <groupId>com.wipro</groupId>
   <artifactId>core-advanced-java</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>java-concepts </name>
+  <name>java-concepts</name>
   <description>Learning core and advanced java</description>
 </project>
