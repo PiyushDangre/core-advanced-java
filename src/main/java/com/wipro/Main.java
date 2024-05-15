@@ -3,6 +3,10 @@ package com.wipro;
 import com.wipro.constructor_chaining.Student;
 import com.wipro.initializer_block.Cashier;
 import com.wipro.initializer_block.Employee;
+import com.wipro.synchronize.Customer;
+import com.wipro.synchronize.Table;
+import com.wipro.synchronize.Table2;
+import com.wipro.threads.Thread1;
 import com.wipro.typecasting.Animal;
 import com.wipro.typecasting.Dog;
 
@@ -15,7 +19,7 @@ public class Main {
 		System.out.println("This is a static block which executes before main method");
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws InterruptedException {
 		System.out.println("This is main method. Project working");
 		
 		/**
@@ -90,6 +94,167 @@ public class Main {
 			System.out.println("Exception caught --> "+ ex.getMessage() );
 		}
 		
+		/**
+		 * Multi-threading 
+		 * 
+		 */
 		
+		System.out.println("Name of thread running is -->"+ Thread.currentThread().getName());
+		
+		Thread t1 = new Thread1();
+		Thread t2 = new Thread1();
+		Thread t33 = new Thread1();
+
+		/*
+		 * t1.start(); t2.start(); t33.start();
+		 */
+	
+		t1.start();
+		t1.join();
+		t2.start();
+		t2.join();
+		t33.start();
+		t33.join();
+		
+		/**
+		 * The above will print this -->
+		 * 	Name of the thread running is -->Thread-0 and i =0
+			Name of the thread running is -->Thread-0 and i =1
+			Name of the thread running is -->Thread-1 and i =0
+			Name of the thread running is -->Thread-1 and i =1
+			Name of the thread running is -->Thread-2 and i =0
+			Name of the thread running is -->Thread-2 and i =1
+		 */
+
+		/**
+		 * Synchronized method. block and static method
+		 * --> Synchronized method example below.
+		 * - If the method would not have been synchronized, the two threads would have run simultaneuously. Now there is order.
+		 */
+		Table ta = new Table();
+		
+		Thread th1 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					ta.printTable(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+			
+		});
+		
+		Thread th2 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					ta.printTable(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+			
+		});
+		
+		th1.start();
+		th2.start();
+		
+		Table2 ta2 = new Table2();
+		
+		Thread th3 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					ta2.printTable(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+			
+		});
+		
+		Thread th4 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					ta2.printTable(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+			
+		});
+		
+		th3.start();
+		th4.start();
+		
+		// ---Static synchronized method --//
+		
+Table2 ta3 = new Table2();
+		
+		Thread th5 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					ta3.printTable(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+			
+		});
+		
+		Thread th6 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					ta3.printTable(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+			
+		});
+		
+		th5.start();
+		th6.start();
+		
+		// -- wait() and notify() methods --//
+		
+		Customer c = new Customer();
+		
+		new Thread() {
+			public void run() {
+				try {
+					c.withdraw(11000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}.start();
+		
+		new Thread() {
+			public void run() {
+				c.deposit(1000);
+			}
+		}.start();
+		
+		/*
+		 * new Thread() { public void run() { c.withdraw(11000); } }.start();
+		 */
 	}
 }
