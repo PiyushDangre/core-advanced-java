@@ -48,3 +48,9 @@ Thumbs.db
 *.mov
 *.wmv
 
+/.project
+
+/java-strings/Java_String/bin
+/java-strings/Java_String/.classpath
+/java-strings/Java_String/.project
+/java-strings/Java_String/.settings
