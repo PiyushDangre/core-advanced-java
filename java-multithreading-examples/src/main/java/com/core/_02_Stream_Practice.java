@@ -36,6 +36,21 @@ public class _02_Stream_Practice {
 		mergeUnsortedArray();
 		sumOfAllDigitsInAnInteger();
 		secondLargestNumberinArray();
+		reverseEachWordOfString();
+	}
+
+	/**
+	 * Reverse each word of string
+	 * 
+	 * - First generate stream of words using Arrays.stream(s.split(" "))
+	 * - Then map to stringBuilder and reverse it
+	 * - Then collect using Collectors.collect(" ")
+	 */
+	private static void reverseEachWordOfString() {
+
+        String str = "Java Concept Of The Day";
+        String listOfReversed = Arrays.stream(str.split(" ")).map(s -> new StringBuilder(s).reverse().toString()).collect(Collectors.joining(" "));
+		System.out.println("String with reversed words = "+listOfReversed); // String with reversed words = avaJ tpecnoC fO ehT yaD
 	}
 
 	/**
@@ -50,7 +65,7 @@ public class _02_Stream_Practice {
 		int[] array = { 45, 12, 56, 15, 24, 75, 31, 89 };
 		Optional<Integer> secondLargets = Arrays.stream(array).mapToObj(i -> (Integer) i)
 				.sorted(Comparator.reverseOrder()).skip(1).findFirst();
-		System.out.println("Second largest integer is " + secondLargets.get());
+		System.out.println("Second largest integer is " + secondLargets.get()); // Second largest integer is 75
 	}
 
 	/**
