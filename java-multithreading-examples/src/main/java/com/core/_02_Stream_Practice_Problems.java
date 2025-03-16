@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * 
  * Source -> https://medium.com/@mehar.chand.cloud/java-stream-coding-interview-questions-part-1-dc39e3575727
  */
-public class _02_Stream_Practice {
+public class _02_Stream_Practice_Problems {
 
 	public static void main(String[] args) {
 		
