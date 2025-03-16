@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
@@ -34,6 +35,22 @@ public class _02_Stream_Practice {
 		compareCollections();
 		mergeUnsortedArray();
 		sumOfAllDigitsInAnInteger();
+		secondLargestNumberinArray();
+	}
+
+	/**
+	 * Find second largest number in an integer array?
+	 * 
+	 * 	- We have used mapToObj after generating IntStream using Arrays.stream(). 
+	 * 		-- This was done to convert int into Integer object to apply .sorted() method with Comparator.reverseOrder() as parameter.
+	 * 	- We have used skip(1) to skip first element after reverse ordering.
+	 * 	- we have used findFirst() to get the second element after skipping first.
+	 */
+	private static void secondLargestNumberinArray() {
+		int[] array = { 45, 12, 56, 15, 24, 75, 31, 89 };
+		Optional<Integer> secondLargets = Arrays.stream(array).mapToObj(i -> (Integer) i)
+				.sorted(Comparator.reverseOrder()).skip(1).findFirst();
+		System.out.println("Second largest integer is " + secondLargets.get());
 	}
 
 	/**
