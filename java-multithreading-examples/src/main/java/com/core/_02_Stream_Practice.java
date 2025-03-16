@@ -1,6 +1,7 @@
 package com.core;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -56,8 +57,20 @@ public class _02_Stream_Practice {
 		
 		Map map = Arrays.stream(strArray).collect(Collectors.groupingBy(s -> s, Collectors.counting()));
 		
-		System.out.println("Word frequency map ==> "+map); // Word frequency map ==> {banana=2, cherry=1, apple=3}
+		System.out.println("Word frequency map 1 ==> "+map); // Word frequency map ==> {banana=2, cherry=1, apple=3}
 
+		/**
+		 * - Below is another way of turning string into stream of letters.
+		 * - Here the difference is that string has spaces. So we have to use flatmap to convert to individual letters
+		 *   after splitting using " " (space) delimiter.
+		 */
+		
+		String inputString = "Java Concept Of The Day";
+		
+		Map map2 = Arrays.stream(inputString.toLowerCase().split(" ")).flatMap(s -> Arrays.stream(s.split("")))
+				.collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+		
+		System.out.println("Word frequency map2 =>"+map2); // Word frequency map2 =>{p=1, a=3, c=2, d=1, t=2, e=2, f=1, v=1, h=1, y=1, j=1, n=1, o=2}
 	}
 
 	/**
@@ -141,6 +154,13 @@ public class _02_Stream_Practice {
 		System.out.println("Asc order => "+colorsSortedAsc);
 	    List < String > colorsSortedDesc = colors.stream().sorted((s1, s2) -> s2.compareTo(s1)).collect(Collectors.toList());
 	    System.out.println("Desc order => "+colorsSortedDesc);
+	    
+	    /**
+	     * - Another way of reverse ordering is using Comparator.reverseOrder()
+	     */
+	    
+	    List<String> colorsReversed = colors.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+	    System.out.println("Desc order of colors using Comparator.reverseOrder() - "+colorsReversed); // Desc order of colors using Comparator.reverseOrder() - [Red, Pink, Green, Brown, Blue]
 	}
 
 	/**
