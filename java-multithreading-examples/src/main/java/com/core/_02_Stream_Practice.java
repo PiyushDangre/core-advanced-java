@@ -1,5 +1,6 @@
 package com.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -28,8 +30,47 @@ public class _02_Stream_Practice {
 		kthSmallestElementInArray();
 		wordFrequency();
 		evenOddPartitioning();
+		joinStringsSuffixPrefix();
+		compareCollections();
+		mergeUnsortedArray();
+		sumOfAllDigitsInAnInteger();
 	}
-	
+
+	/**
+	 * - Find sum of all digits of a number in Java 8?
+	 * - We are using Collectors.summingInt(). Inside that method we are parsing integer from the existing string stream.
+	 * - Notice initially we have converted the int to String stream by using String.valueOf(integer) and then calling .split("") method.
+	 */
+	private static void sumOfAllDigitsInAnInteger() {
+		int i = 15623;
+		Integer sum = Arrays.stream(String.valueOf(i).split(""))
+				.collect(Collectors.summingInt(s -> Integer.parseInt(s)));
+		System.out.println("Sum of digits in number is " + sum); // Sum of digits in number is 17
+	}
+
+	/**
+	 * - Merge two unsorted arrays into single sorted array without duplicates?
+	 * - Notice usage of IntStream to concat
+	 * - Notice usage of .toArray() terminal method
+	 */
+	private static void mergeUnsortedArray() {
+		int[] a = new int[] { 4, 2, 5, 1 };
+		int[] b = new int[] { 8, 1, 9, 5 };
+		int[] ab = IntStream.concat(Arrays.stream(a), Arrays.stream(b)).sorted().distinct().toArray();
+		System.out.println("Sorted and de-duplicated array - " + Arrays.toString(ab)); // Sorted and de-duplicated array
+	}
+
+	/**
+	 * Given a list of strings, join the strings with ‘[‘ as prefix, ‘]’ as suffix and ‘,’ as delimiter?
+	 * 
+	 * - Here we are using Collectors.joining() method. It always returns String.
+	 */
+	private static void joinStringsSuffixPrefix() {
+        List<String> listOfStrings = Arrays.asList("Facebook", "Twitter", "YouTube", "WhatsApp", "LinkedIn");
+        String s = listOfStrings.stream().collect(Collectors.joining(",", "[", "]"));
+        System.out.println("Joined String - "+s);
+	}
+
 	/**
 	 * Implement a method to partition a list into two groups based on a predicate using Java streams:
 	 * 
@@ -196,6 +237,32 @@ public class _02_Stream_Practice {
 		
 	}
 	
+	/**
+	 * - here we are sorting collections on the basis of more than one keys. 
+	 * - We are using comparator.compare() method to generate custom comparator on the basis of keys(fields) that we pass.
+	 */
+	private static void compareCollections() {
+		
+		List<Person> people = new ArrayList<Person>();
+		people.add(new Person(30, "Piyush", "Dangre"));
+		people.add(new Person(30, "Aprajita", "Murthy"));
+		people.add(new Person(2, "Daichi", "Sawamura"));
+		
+		List<String> list1 = people.stream().sorted((p1, p2) -> Integer.compare(p1.getAge(), p2.getAge()))
+				.map(p -> p.getFirstName()).collect(Collectors.toList());
+		System.out.println(list1); // [Daichi, Piyush, Aprajita]
+
+		List<String> list2 = people.stream().sorted(Comparator.comparing(Person::getAge)).map(p -> p.getFirstName())
+				.collect(Collectors.toList());
+		System.out.println(list2); // [Daichi, Piyush, Aprajita]
+
+		List<String> list3 = people.stream()
+				.sorted(Comparator.comparing(Person::getAge).thenComparing(Person::getFirstName))
+				.map(p -> p.getFirstName()).collect(Collectors.toList());
+		System.out.println(list3); // [Daichi, Aprajita, Piyush]
+		
+	}
+	
 	
 
 }
@@ -238,6 +305,70 @@ class Transaction {
 	
 	
 	
+	
+	
+}
+
+/**
+ * Sample Person class
+ */
+class Person {
+	
+	private int age;
+	private String firstName;
+	private String lastName;
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	public Person(int age, String firstName, String lastName) {
+		super();
+		this.age = age;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(age, firstName, lastName);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		return age == other.age && Objects.equals(firstName, other.firstName)
+				&& Objects.equals(lastName, other.lastName);
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Person [age=");
+		builder.append(age);
+		builder.append(", firstName=");
+		builder.append(firstName);
+		builder.append(", lastName=");
+		builder.append(lastName);
+		builder.append("]");
+		return builder.toString();
+	}
 	
 	
 }
