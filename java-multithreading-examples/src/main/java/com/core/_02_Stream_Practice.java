@@ -5,9 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class has practice questions solutions for common stream api questions.
+ * Source -> https://medium.com/@mehar.chand.cloud/java-stream-coding-interview-questions-part-1-dc39e3575727
+ */
 public class _02_Stream_Practice {
 
 	public static void main(String[] args) {
@@ -18,11 +23,63 @@ public class _02_Stream_Practice {
 		sort();
 		mergeSortedStreams();
 		sumOfTxnsForEachDay();
-		
-		
-		
+		kthSmallestElementInArray();
+		wordFrequency();
+		evenOddPartitioning();
 	}
 	
+	/**
+	 * Implement a method to partition a list into two groups based on a predicate using Java streams:
+	 * 
+	 * Source - https://www.geeksforgeeks.org/collectors-partitioningby-method-in-java/
+	 */
+	private static void evenOddPartitioning() {
+		List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+		
+		Map map = numbers.stream().collect(Collectors.partitioningBy(s -> s % 2 == 0));
+		
+		List<Integer> evenNos = (List<Integer>) map.get(true);
+		List<Integer> oddNos = (List<Integer>) map.get(false);
+
+		System.out.println("Even numbers list --> "+evenNos);
+		System.out.println("Odd numbers list --> "+oddNos);
+		
+	}
+
+	/**
+	 * Given a list of strings, find the frequency of each word using Java streams:
+	 */
+	private static void wordFrequency() {
+		String[] strArray = {"apple", "banana", "apple", "cherry", 
+                "banana", "apple"};
+		
+		Map map = Arrays.stream(strArray).collect(Collectors.groupingBy(s -> s, Collectors.counting()));
+		
+		System.out.println("Word frequency map ==> "+map); // Word frequency map ==> {banana=2, cherry=1, apple=3}
+
+	}
+
+	/**
+	 * Q. Find the 3rd smallest element in an array using Java streams:
+	 */
+	private static void kthSmallestElementInArray() {
+		int[] array = {4, 2, 7, 1, 5, 3, 6};
+		/*
+		 * Arrays.asList(array).stream().mapToInt(s -> Integer.valueOf(s)) .sorted()
+		 * .limit(3) .max();
+		 */
+		
+		OptionalInt thirdSmallest = Arrays.stream(array)
+		 .sorted()
+		 .limit(3)
+		 .max();
+		
+		System.out.println("third smallest elemement = " + thirdSmallest.getAsInt()); // third smallest elemement = 3
+	}
+
+	/**
+	 * Sum of transaction amount according to date
+	 */
 	private static void sumOfTxnsForEachDay() {
 		List<Transaction> transactions = Arrays.asList(
 			    new Transaction("2022-01-01", 100),
@@ -32,7 +89,7 @@ public class _02_Stream_Practice {
 			    new Transaction("2022-01-03", 500)
 			);
 		
-// My first attempt way
+		// My first attempt way
 		
 		transactions.stream().collect(Collectors.groupingBy(s -> s.date)).entrySet().stream().forEach((s) -> {
 			String key = s.getKey();
@@ -59,6 +116,7 @@ public class _02_Stream_Practice {
 		// In above example .summarizingInt() is used. Here .summingInt() is used. Note the difference in names and the data returned.
 
 		Map map2 = transactions.stream().collect(Collectors.groupingBy(s -> s.date , Collectors.summingInt(s -> s.amt)));
+		
 		System.out.println(map2);
 	}
 
@@ -73,7 +131,9 @@ public class _02_Stream_Practice {
 	}
 	
 	
-
+	/**
+	 * Sort in ascending and descending order
+	 */
 	private static void sort() {
 	    List < String > colors = Arrays.asList("Red", "Green", "Blue", "Pink", "Brown");
 	    List < String > colorsSortedAsc = colors.stream().sorted((s1, s2) -> s1.compareTo(s2)).collect(Collectors.toList());
@@ -122,6 +182,9 @@ public class _02_Stream_Practice {
 }
 
 
+/**
+ * Sample class created for demo usage
+ */
 class Transaction {
 	String date;
 	Integer amt;
