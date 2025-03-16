@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 /**
  * This class has practice questions solutions for common stream api questions.
+ * 
  * Source -> https://medium.com/@mehar.chand.cloud/java-stream-coding-interview-questions-part-1-dc39e3575727
  */
 public class _02_Stream_Practice {
@@ -170,9 +171,7 @@ public class _02_Stream_Practice {
 	private static void sumOfEvenNos() {
 		
 		List<Integer> list = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
-
 		Integer sum = list.stream().filter(s -> s % 2 == 0).mapToInt(s -> s.intValue()).sum();
-
 		System.out.println("Sum of even numbers is "+sum); // Sum of even numbers is 30
 		
 	}
