@@ -37,6 +37,29 @@ public class _02_Stream_Practice_Problems {
 		sumOfAllDigitsInAnInteger();
 		secondLargestNumberinArray();
 		reverseEachWordOfString();
+		groupByAndMax();
+	}
+	
+	
+
+	
+	/**
+	 * Group by common property and find max salary
+	 * 
+	 * - Here we are grouping by common age and finding max salary per group
+	 * 
+	 */
+	private static void groupByAndMax() {
+		List<Person> people = new ArrayList<Person>();
+		people.add(new Person(30, "Piyush", "Dangre", 30000));
+		people.add(new Person(30, "Aprajita", "Murthy", 40000));
+		people.add(new Person(2, "Daichi", "Sawamura", 15000));
+		
+		Map map = people.stream().collect(
+				Collectors.groupingBy(p -> p.getAge(), Collectors.maxBy(Comparator.comparingInt(p -> p.getSalary()))));
+		
+		System.out.println(map); // {2=Optional[Person [age=2, firstName=Daichi, lastName=Sawamura]], 30=Optional[Person [age=30, firstName=Aprajita, lastName=Murthy]]}
+
 	}
 
 	/**
@@ -349,6 +372,14 @@ class Person {
 	private int age;
 	private String firstName;
 	private String lastName;
+	private int salary;
+	
+	public int getSalary() {
+		return salary;
+	}
+	public void setSalary(int age) {
+		this.salary = salary;
+	}
 	public int getAge() {
 		return age;
 	}
@@ -373,9 +404,17 @@ class Person {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
+	
+	public Person(int age, String firstName, String lastName, int salary) {
+		super();
+		this.age = age;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.salary = salary;
+	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(age, firstName, lastName);
+		return Objects.hash(age, firstName, lastName, salary);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -387,7 +426,7 @@ class Person {
 			return false;
 		Person other = (Person) obj;
 		return age == other.age && Objects.equals(firstName, other.firstName)
-				&& Objects.equals(lastName, other.lastName);
+				&& Objects.equals(lastName, other.lastName) && salary == other.salary;
 	}
 	@Override
 	public String toString() {
