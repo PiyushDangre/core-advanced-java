@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 /**
- *  Write a Java program that takes a list of integers amd performs the following
+ *  Write a Java program that takes a list of integers and performs the following
  *  set of operations using lambda expressions -
  *
  *   -- Filter out even numbers
