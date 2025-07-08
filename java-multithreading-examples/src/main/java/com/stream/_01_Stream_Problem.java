@@ -1,9 +1,6 @@
 package com.stream;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,11 +16,15 @@ public class _01_Stream_Problem {
 	public static void main(String[] args) {
 		
 		String s = "PPiiuiyushhh";
-    
-	   System.out.println( s.codePoints().mapToObj(Character::toString).collect(Collectors.groupingBy(e-> e)));
+
+		/**
+		 *  - Following 2 lines commented as Character.toString() method has been removed in Java 21.
+		 *  1. System.out.println( s.codePoints().mapToObj(Character::toString).collect(Collectors.groupingBy(e-> e)));
+		 *  2. s.codePoints().mapToObj(Character::toString).collect(Collectors.groupingBy(e-> e)).entrySet().stream().forEach(e -> System.out.println(e.getKey() + "-->"+ e.getValue().size()));
+		 */
+
 	   
-	   s.codePoints().mapToObj(Character::toString).collect(Collectors.groupingBy(e-> e)).entrySet().stream().forEach(e -> System.out.println(e.getKey() + "-->"+ e.getValue().size()));
-	   
+
 	   /**
 	    * Another way of turning string into a list of strings.
 	    * 
@@ -31,7 +32,7 @@ public class _01_Stream_Problem {
 	    */
 	   
 	   
-	   String a = "ABBCCCDDDDE";
+	   String a = "ABBCCCDDDDEBBCA";
 	   
 	   List<String> ss = Arrays.asList(a.split(""));
 	   
@@ -48,5 +49,17 @@ public class _01_Stream_Problem {
 		Arrays.stream(a.split("")).collect(Collectors.groupingBy(e -> e, Collectors.counting())).entrySet().stream()
 				.forEach(
 						sss -> System.out.println("Key - " + sss.getKey() + " | No. of Occurence - " + sss.getValue()));
+
+
+		/**
+		 * - If we want to preserve the Order of the Map, we have to provide a Supplier Interface
+		 * 	 to the groupingBy function.
+		 * - This supplier interface should return LinkedHashMap instance of same type, so that
+		 * 	 order of insertion is preserved.
+		 */
+		Arrays.stream(a.split("")).collect(Collectors.groupingBy(e -> e, () -> new LinkedHashMap<String, Long>(), Collectors.counting())).entrySet().stream()
+				.forEach(
+						sss -> System.out.println("Ordered Key - " + sss.getKey() + " | No. of Occurence - " + sss.getValue()));
+
 	}
 }
