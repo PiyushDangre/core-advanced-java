@@ -2,6 +2,8 @@ package com.multithreading;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  *  ----- JAVA 8 CompletableFuture --------
@@ -42,11 +44,7 @@ public class _05_CompletableFuture {
          * - We provide an instance of Supplier Functional Interface to that method.
          */
         CompletableFuture<String> cf = CompletableFuture.supplyAsync(()-> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            sleep(5000);
             return "Async task processing finished";
         });
 
@@ -64,6 +62,86 @@ public class _05_CompletableFuture {
                 .thenApply((s) -> s + " and this is another async task");
 
         System.out.println(cf1.get()); // Prints "This is an async task and this is another async task".
+
+        /**
+         * Chaining callbacks
+         *  - .thenApply() --> Applied a Function Interface (Meant to return a completableFuture instance)
+         *  - .thenAccept() --> Applies a Consumer Interface (Doesn't return anything)
+         *
+         *  Note in below example the cf2 type is CompletableFuture<Void> because .thenAccept returns it.
+         */
+
+        CompletableFuture<Void> cf2 = CompletableFuture.supplyAsync(()-> "Async Task #2")
+                .thenApply(String::toLowerCase)
+                .thenAccept(System.out::println);
+
+        cf2.get(); // Prints "async task #2"
+
+        /**
+         * If we want the chaining callbacks to run in different threads then use the
+         * ..async versions of the callback methods.
+         *
+         *  - So the three threadnames printed will be different below.
+         */
+
+        CompletableFuture<Void> cf4 = CompletableFuture.supplyAsync(()-> {
+                    System.out.println(Thread.currentThread().getName()); // Prints "ForkJoinPool.commonPool-worker-<some integer>"
+                    sleep(300);
+                    return "Async Task #3";
+                })
+                .thenApplyAsync((s)-> {
+                    System.out.println(Thread.currentThread().getName()); // Prints "ForkJoinPool.commonPool-worker-<some integer>"
+                    sleep(100);
+                    return s + " in Java";
+                })
+                .thenAcceptAsync((s)-> {
+                    System.out.println(Thread.currentThread().getName()); // Prints "ForkJoinPool.commonPool-worker-<some integer>"
+                    sleep(300);
+                    System.out.println(s);
+                });
+
+        cf4.get();
+
+        /**
+         * Using custom executorService
+         *  - Here we are passing our own impl'n of threadpool of 5 threads.
+         *  - Notice how each callback function that we pass will print different threads from the threadpool.
+         *  - All the callbacks will have to accept additional parameter of ExecutorService reference.
+         */
+        ExecutorService ex = Executors.newFixedThreadPool(5);
+
+        CompletableFuture.supplyAsync(()-> "Async Task #1", ex)
+                .thenApplyAsync((s)-> {
+                    System.out.println(Thread.currentThread().getName());   // // Prints "pool-1-thread-2"
+                    sleep(300);
+                    return s.toUpperCase();
+                }, ex)
+                .thenAcceptAsync((s)-> {
+                    System.out.println(Thread.currentThread().getName());  // Prints "pool-1-thread-3"
+                    sleep(300);
+                    System.out.println("String - "+s);
+                }, ex)
+                .get();
+
+        ex.shutdown();
+
+
+
+
+
+
+    }
+
+    /**
+     * Make the current thread sleep.
+     * @param millis
+     */
+    private static void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
