@@ -307,7 +307,7 @@ public class _02_Stream_Practice_Problems {
 				.map(p -> p.getFirstName()).collect(Collectors.toList());
 		System.out.println(list1); // [Daichi, Piyush, Aprajita]
 
-		List<String> list2 = people.stream().sorted(Comparator.comparing(Person::getAge)).map(p -> p.getFirstName())
+		List<String> list2 = people.stream().sorted(Comparator.comparing(Person::getAge)).map(Person::getFirstName)
 				.collect(Collectors.toList());
 		System.out.println(list2); // [Daichi, Piyush, Aprajita]
 
