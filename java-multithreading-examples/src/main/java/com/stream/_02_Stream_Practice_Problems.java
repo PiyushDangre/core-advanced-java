@@ -31,6 +31,7 @@ public class _02_Stream_Practice_Problems {
 		reverseEachWordOfString();
 		groupByAndMax();
 		firstNonRepeatedCharacter();
+		convertListToMapByRemovingDuplicates();
 	}
 
 
@@ -323,16 +324,43 @@ public class _02_Stream_Practice_Problems {
 				.collect(Collectors.groupingBy(s -> s, () -> new LinkedHashMap<>(), Collectors.counting()))
 				.entrySet()
 				.stream()
-				.filter((e) -> e.getValue() == 1)
+				.filter((e) -> e.getValue() == 1L)
 				.findFirst()
 				.map((e)-> e.getKey())
-				.ifPresent(System.out::printf);
+				.ifPresent(System.out::println); // Prints "J"
 
 
 	}
 
+	/**
+	 * Here we are firstly sorting the map in reverse order using comparator passed on the basis of pages
+	 * Then  we are converting it into map
+	 * We are removing duplicates on the basis of tagName
+	 * Duplicate removal is done by passing mergeFunction to toMap method
+	 * We are keeping the old value instead of new one when we encounter duplicate key in the Map using mergeFunction
+	 */
+	private static void convertListToMapByRemovingDuplicates(){
+
+		List<Note> noteLst = new ArrayList<>();
+		noteLst.add(new Note(1, "note1", 11));
+		noteLst.add(new Note(2, "note2", 22));
+		noteLst.add(new Note(3, "note3", 33));
+		noteLst.add(new Note(4, "note4", 44));
+		noteLst.add(new Note(5, "note5", 55));
+		noteLst.add(new Note(6, "note4", 66));
+
+		//System.out.println(noteLst);
+		noteLst.stream().sorted((a, b)-> Long.compare(b.pages(), a.pages()))
+				.collect(Collectors.toMap((k)-> k.tagName(), (v)-> v.pages(), (a, b)-> a))
+				.forEach((k,v)-> System.out.println(k + " - "+v));
+
+	}
+
+
 }
 
+record Note(Integer tagId, String tagName, Integer pages) {
+}
 
 /**
  * Sample class created for demo usage
