@@ -16,6 +16,25 @@ public class _05_Stream_Practice_Problems_2026 {
         groupByLength();
         concatenateStrings();
         findLongest();
+        findAllPalindromicStrings();
+        findLongestWordFromSentence();
+
+    }
+
+    private static void findLongestWordFromSentence() {
+        String sentence = "Java Stream API is very powerful";
+        Arrays.stream(sentence.split(" "))
+                .sorted(Comparator.comparingInt(String::length).reversed())
+                .findFirst()
+                .ifPresent(s-> System.out.println("The longest one is "+s));
+    //.collect(Collectors.toMap(k-> k, v-> v.length()))
+    }
+
+    private static void findAllPalindromicStrings() {
+        List<String> words = Arrays.asList("radar", "level", "world", "java");
+        System.out.println("Palindromic strings are following");
+        words.stream().filter(s-> s.equals(new StringBuilder(s).reverse().toString()))
+                .collect(Collectors.toList()).forEach(System.out::println);
     }
 
     private static void findLongest() {
@@ -70,6 +89,15 @@ public class _05_Stream_Practice_Problems_2026 {
     private static void sumOfNumbersInList() {
         List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5);
         System.out.println("Sum is "+numbers.stream().mapToInt(Integer::intValue).sum());
+
+        // With reduce
+        numbers.stream()
+                .collect(Collectors.reducing((a,b) -> a + b))
+                .ifPresent(s-> System.out.println("The sum is "+s));
+
+        // Parallel stream
+        Integer sum = numbers.parallelStream().mapToInt(i-> i.intValue()).sum();
+        System.out.println("The sum using parallelstream is "+sum);
     }
 
     private static void findFirstNonRepeatedChatracterInString() {
